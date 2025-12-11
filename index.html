@@ -58,6 +58,21 @@
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
+
+    @media (max-width: 600px) {
+      #photo {
+        flex-direction: column !important;
+        text-align: center;
+      }
+
+      #photo img {
+        max-width: 150px;
+      }
+
+      #photo div {
+        text-align: center;
+      }
+    }
   </style>
 </head>
 
@@ -88,7 +103,7 @@
     <div class="project">
       <h3><a href="https://github.com/erik-programmer/soccer_run">Soccer run</a></h3>
       <p>Its a competition game between 3 different teams where every team has 3 players. The logic of the game is
-        totally random.</p>
+        totally random. Its written in Lua.</p>
     </div>
 
     <div class="project">
