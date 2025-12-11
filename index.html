@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eriks home</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+      background: linear-gradient(135deg, #f8f9ff, #e3f2ff);
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #2a4b8d;
+      margin-bottom: 40px;
+    }
+
+    section {
+      margin-bottom: 50px;
+      background: #ffffffdd;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    h2 {
+      border-left: 6px solid #2a4b8d;
+      padding-left: 10px;
+      font-size: 1.8rem;
+      color: #2a4b8d;
+    }
+
+    .project {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #f1f7ff;
+      border: 1px solid #c7ddff;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .project:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    img {
+      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome!</h1>
+
+  <section id="photo" style="display: flex; align-items: center; gap: 20px;">
+    <img src="photo.png" />
+    <div>
+      <p>Hi! My name is Erik and I am 9 years old. I love coding, reading, swimming and tennis.</p>
+      <p>I have 2 favorite books: "Diary of a wimpy kid" and "Der kleine Drache Kokosnuss"</p>
+      <p>In future I will become a software engineer.</p>
+      <p>In case you want to send me a message, my mail is erik [dot] s [dot] programmer [at] gmail [dot] com</p>
+    </div>
+  </section>
+
+
+
+  <section id="projects">
+    <h2>Projects</h2>
+
+    <div class="project">
+      <h3><a href="alien_attack/index.html">Alien attack</a></h3>
+      <p>Its a game where you should save the world by killing aliens. I wrote this game in Lua and later it was
+        translated to JavaScript by ChatGPT.</p>
+    </div>
+
+    <div class="project">
+      <h3><a href="https://github.com/erik-programmer/soccer_run">Soccer run</a></h3>
+      <p>Its a competition game between 3 different teams where every team has 3 players. The logic of the game is
+        totally random.</p>
+    </div>
+
+    <div class="project">
+      <h3><a href="https://github.com/erik-programmer/table_extensions">Table extensions</a></h3>
+      <p>Frequently used table functions for Lua.</p>
+    </div>
+
+  </section>
+</body>
+
+</html>
