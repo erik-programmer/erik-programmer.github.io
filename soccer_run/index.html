@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Football Game</title>
+<style>
+  body {
+    margin: 0;
+    background: #222;
+  }
+  canvas {
+    display: block;
+    margin: auto;
+    background: #222;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="game" width="900" height="700"></canvas>
+
+<script>
+/* =============================
+   Canvas
+============================= */
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+/* =============================
+   Data
+============================= */
+
+let teams = [
+  { name: "Barca",  points: 0 },
+  { name: "Real",   points: 0 },
+  { name: "Bayern", points: 0 }
+];
+
+let players = [
+  { name: "Yamal",       points: [], team: teams[0] },
+  { name: "Neuer",       points: [], team: teams[2] },
+  { name: "Mbappe",      points: [], team: teams[1] },
+  { name: "Bellingham",  points: [], team: teams[1] },
+  { name: "Kimmich",     points: [], team: teams[2] },
+  { name: "Musiala",     points: [], team: teams[2] },
+  { name: "Raphinha",    points: [], team: teams[0] },
+  { name: "Rodrygo",     points: [], team: teams[1] },
+  { name: "Lewandowski", points: [], team: teams[0] }
+];
+
+let draw_image = null;
+let lost_image = null;
+let won_image = null;
+let happy_image = null;
+let neutral_image = null;
+let sad_image = null;
+let third_place_image = null;
+
+/* =============================
+   Round logic
+============================= */
+
+function round() {
+  if (teams.length === 2 && players[0].points.length === 10) {
+    return;
+  }
+
+  if (players[0].points.length > 9) {
+    players.forEach(p => p.points = []);
+
+    players = players.filter(p => p.team !== teams[2]);
+
+    third_place_image = teams[2].photo;
+    teams.splice(2, 1);
+
+    teams.forEach(t => t.points = 0);
+  }
+
+  players.forEach(player => {
+    const random = Math.floor(Math.random() * 3);
+
+    if (random === 0) {
+      player.points.push(0);
+    }
+    if (random === 1) {
+      player.points.push(1);
+      player.team.points += 1;
+    }
+    if (random === 2) {
+      player.points.push(3);
+      player.team.points += 3;
+    }
+  });
+
+  players.sort(
+    (a, b) =>
+      b.points.reduce((s, p) => s + p, 0) -
+      a.points.reduce((s, p) => s + p, 0)
+  );
+
+  teams.sort((a, b) => b.points - a.points);
+}
+
+/* =============================
+   Assets
+============================= */
+
+function loadImage(name) {
+  const img = new Image();
+  img.src = name;
+  return img;
+}
+
+function love_load() {
+  players.forEach(player => {
+    player.photo = loadImage(player.name + ".png");
+  });
+
+  draw_image = loadImage("Draw.png");
+  won_image = loadImage("Won.png");
+  lost_image = loadImage("Lost.png");
+
+  happy_image = loadImage("Happy.png");
+  neutral_image = loadImage("Neutral.png");
+  sad_image = loadImage("Sad.png");
+
+  teams.forEach(team => {
+    team.photo = loadImage(team.name + ".png");
+  });
+
+  round();
+}
+
+/* =============================
+   Input
+============================= */
+
+let enter_down = false;
+const keys = {};
+
+window.addEventListener("keydown", e => keys[e.key] = true);
+window.addEventListener("keyup", e => keys[e.key] = false);
+
+/* =============================
+   Update
+============================= */
+
+function love_update() {
+  if (keys["Enter"]) {
+    if (!enter_down) {
+      round();
+    }
+    enter_down = true;
+  } else {
+    enter_down = false;
+  }
+}
+
+/* =============================
+   Draw helpers
+============================= */
+
+function drawImage(img, x, y, sx, sy) {
+  if (!img || !img.complete) return;
+  ctx.drawImage(img, x, y, img.width * sx, img.height * sy);
+}
+
+/* =============================
+   Draw
+============================= */
+
+function love_draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+
+  if (teams.length === 2 && players[0].points.length === 10) {
+    drawImage(teams[0].photo, 70, 100, 0.6, 0.6);
+    drawImage(teams[1].photo, 320, 100, 0.6, 0.6);
+    drawImage(third_place_image, 600, 100, 0.6, 0.6);
+
+    drawImage(happy_image, 70, 250, 0.17, 0.17);
+    drawImage(neutral_image, 320, 250, 0.1, 0.1);
+    drawImage(sad_image, 600, 250, 0.13, 0.13);
+  } else {
+    players.forEach((player, index) => {
+      drawImage(player.photo, 10, index * 60 + 10, 0.17, 0.17);
+
+      player.points.forEach((point, index2) => {
+        const x = index2 * 60 + 70;
+        const y = index * 60 + 10;
+
+        if (point === 0) drawImage(lost_image, x, y, 0.07, 0.07);
+        if (point === 1) drawImage(draw_image, x, y, 0.07, 0.07);
+        if (point === 3) drawImage(won_image, x, y, 0.07, 0.07);
+      });
+
+      const totalPoints = player.points.reduce((s, p) => s + p, 0);
+      ctx.fillText(
+        totalPoints,
+        player.points.length * 60 + 70,
+        index * 60 + 30
+      );
+    });
+
+    drawImage(teams[0].photo, 70, 550, 0.3, 0.3);
+    drawImage(teams[1].photo, 320, 550, 0.3, 0.3);
+    ctx.fillText(teams[0].points, 120, 550);
+    ctx.fillText(teams[1].points, 370, 550);
+
+    if (teams.length === 3) {
+      drawImage(teams[2].photo, 620, 550, 0.3, 0.3);
+      ctx.fillText(teams[2].points, 670, 550);
+    }
+  }
+}
+
+/* =============================
+   Game loop
+============================= */
+
+function loop() {
+  love_update();
+  love_draw();
+  requestAnimationFrame(loop);
+}
+
+/* =============================
+   Start
+============================= */
+
+love_load();
+loop();
+</script>
+
+</body>
+</html>
